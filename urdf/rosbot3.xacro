@@ -10,20 +10,25 @@
   <xacro:include filename="$(find rosbot3_description)/urdf/rosbot3.xacro"/>
   <xacro:include filename="$(find ros_commons)/urdf/gazebo.xacro"/>
 
-  <xacro:property name="traction_wheel_drive_type" value="rear"/>
+  <xacro:macro
+    name="add_controller"
+    params="
+      position
+      publish_odom:=false
+    "
+  >
+    <xacro:differential_controller
+      name="wheels_${position}"
+      left_joint="joint_wheel_${position}_left"
+      right_joint="joint_wheel_${position}_right"
+      wheel_separation="${body_width}"
+      wheel_diameter="${wheel_diameter}"
+      publish_odom="${publish_odom}"
+    />
+  </xacro:macro>
 
-
-  <xacro:differential_controller
-    name="wheels_center"
-    left_joint="joint_wheel_${traction_wheel_drive_type}_left"
-    right_joint="joint_wheel_${traction_wheel_drive_type}_right"
-    wheel_separation="${body_width}"
-    wheel_diameter="${wheel_diameter}"
-  />
-  <!--
-    Rear traction drive type
-    <xacro:remove_friction position="rear"/> 
-  -->
+  <xacro:add_controller position="front"/>
+  <xacro:add_controller position="rear" publish_odom="true"/>
 
   <xacro:remove_friction position="front"/>
 

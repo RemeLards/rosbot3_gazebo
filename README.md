@@ -1,3 +1,3 @@
-# roselito_gazebo
+# rosbot3_gazebo
 
-Utilities for simulating the ROSelito robot.
+Utilities for simulating the Rosbot3 robot.
