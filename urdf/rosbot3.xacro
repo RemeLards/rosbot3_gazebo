@@ -3,14 +3,15 @@
 <!--
   Model primitives.
 
-  Author: Helio Perroni Filho
+  Author: Rafael Fracalossi Freitas
 -->
 
 <robot name="rosbot3" xmlns:xacro="http://www.ros.org/wiki/xacro">
   <xacro:include filename="$(find rosbot3_description)/urdf/rosbot3.xacro"/>
   <xacro:include filename="$(find ros_commons)/urdf/gazebo.xacro"/>
 
-  <xacro:macro
+  <!-- Testing skid_steer_controller -->
+  <!-- <xacro:macro
     name="add_controller"
     params="
       position
@@ -29,8 +30,28 @@
 
   <xacro:add_controller position="front"/>
   <xacro:add_controller position="rear" publish_odom="true"/>
+  <xacro:remove_friction position="front"/> -->
 
-  <xacro:remove_friction position="front"/>
+  <xacro:macro
+    name="add_controller"
+    params="
+      position_rear
+      position_front
+      publish_odom:=false
+    "
+  >
+    <xacro:skid_steer_controller
+      name="skid_steer_driver"
+      left_rear_joint="joint_wheel_${position_rear}_left"
+      right_rear_joint="joint_wheel_${position_rear}_right"
+      left_front_joint="joint_wheel_${position_front}_left"
+      right_front_joint="joint_wheel_${position_front}_right"
+      wheel_separation="${body_width}"
+      wheel_diameter="${wheel_diameter}"
+      publish_odom="${publish_odom}"
+    />
+  </xacro:macro>
+  <xacro:add_controller position_rear="rear" position_front="front" publish_odom="true"/>
 
   <xacro:depth_camera name="camera_front"/>
   <xacro:lidar_2d name="laser"/>
